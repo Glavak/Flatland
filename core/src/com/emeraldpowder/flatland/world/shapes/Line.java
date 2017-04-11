@@ -18,6 +18,16 @@ public class Line implements IViewShape, IMiniMapShape, IPhysicsShape
     private Color color;
     private boolean trigger = false;
 
+    public Vector2 getPositionStart()
+    {
+        return positionStart;
+    }
+
+    public Vector2 getPositionEnd()
+    {
+        return positionEnd;
+    }
+
     public Line(Vector2 positionStart, Vector2 positionEnd, Color color)
     {
         this.positionStart = positionStart;
@@ -103,6 +113,12 @@ public class Line implements IViewShape, IMiniMapShape, IPhysicsShape
             return VectorUtils.linesIntersects(positionStart, positionEnd,
                     otherAsLine.positionStart, otherAsLine.positionEnd);
         }
+
+        if (other instanceof Sphere)
+        {
+            return other.isCollides(this);
+        }
+
         throw new RuntimeException("Not implemented shape types combination");
     }
 

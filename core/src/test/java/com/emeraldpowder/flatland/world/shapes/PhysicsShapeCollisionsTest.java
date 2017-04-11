@@ -10,8 +10,8 @@ public class PhysicsShapeCollisionsTest
     public void lineWithLineDistant()
             throws Exception
     {
-        IPhysicsShape shapeA = new Line(new Vector2(-2,0), new Vector2(5,5));
-        IPhysicsShape shapeB = new Line(new Vector2(10,11), new Vector2(12,13));
+        IPhysicsShape shapeA = new Line(new Vector2(-2, 0), new Vector2(5, 5));
+        IPhysicsShape shapeB = new Line(new Vector2(10, 11), new Vector2(12, 13));
 
         boolean actual = shapeA.isCollides(shapeB);
 
@@ -22,8 +22,8 @@ public class PhysicsShapeCollisionsTest
     public void lineWithLineCollinear()
             throws Exception
     {
-        IPhysicsShape shapeA = new Line(new Vector2(0,1), new Vector2(10,11));
-        IPhysicsShape shapeB = new Line(new Vector2(1,0), new Vector2(11,10));
+        IPhysicsShape shapeA = new Line(new Vector2(0, 1), new Vector2(10, 11));
+        IPhysicsShape shapeB = new Line(new Vector2(1, 0), new Vector2(11, 10));
 
         boolean actual = shapeA.isCollides(shapeB);
 
@@ -34,8 +34,8 @@ public class PhysicsShapeCollisionsTest
     public void lineWithLineContinuing()
             throws Exception
     {
-        IPhysicsShape shapeA = new Line(new Vector2(0,0), new Vector2(7,7));
-        IPhysicsShape shapeB = new Line(new Vector2(2,2), new Vector2(10,10));
+        IPhysicsShape shapeA = new Line(new Vector2(0, 0), new Vector2(7, 7));
+        IPhysicsShape shapeB = new Line(new Vector2(2, 2), new Vector2(10, 10));
 
         boolean actual = shapeA.isCollides(shapeB);
 
@@ -46,8 +46,8 @@ public class PhysicsShapeCollisionsTest
     public void lineWithLineColliding()
             throws Exception
     {
-        IPhysicsShape shapeA = new Line(new Vector2(0,0), new Vector2(7,7));
-        IPhysicsShape shapeB = new Line(new Vector2(7,0), new Vector2(0,7));
+        IPhysicsShape shapeA = new Line(new Vector2(0, 0), new Vector2(7, 7));
+        IPhysicsShape shapeB = new Line(new Vector2(7, 0), new Vector2(0, 7));
 
         boolean actual = shapeA.isCollides(shapeB);
 
@@ -58,8 +58,8 @@ public class PhysicsShapeCollisionsTest
     public void lineWithLineTouching()
             throws Exception
     {
-        IPhysicsShape shapeA = new Line(new Vector2(0,0), new Vector2(2,2));
-        IPhysicsShape shapeB = new Line(new Vector2(2,2), new Vector2(7,0));
+        IPhysicsShape shapeA = new Line(new Vector2(0, 0), new Vector2(2, 2));
+        IPhysicsShape shapeB = new Line(new Vector2(2, 2), new Vector2(7, 0));
 
         boolean actual = shapeA.isCollides(shapeB);
 
@@ -70,8 +70,8 @@ public class PhysicsShapeCollisionsTest
     public void lineWithLineTouchingCenter()
             throws Exception
     {
-        IPhysicsShape shapeA = new Line(new Vector2(0,0), new Vector2(2,0));
-        IPhysicsShape shapeB = new Line(new Vector2(2,-1), new Vector2(2,1));
+        IPhysicsShape shapeA = new Line(new Vector2(0, 0), new Vector2(2, 0));
+        IPhysicsShape shapeB = new Line(new Vector2(2, -1), new Vector2(2, 1));
 
         boolean actual = shapeA.isCollides(shapeB);
 
@@ -82,8 +82,8 @@ public class PhysicsShapeCollisionsTest
     public void sphereWithSphereDistant()
             throws Exception
     {
-        IPhysicsShape shapeA = new Sphere(new Vector2(0,0), 2);
-        IPhysicsShape shapeB = new Sphere(new Vector2(7,0), 2);
+        IPhysicsShape shapeA = new Sphere(new Vector2(0, 0), 2);
+        IPhysicsShape shapeB = new Sphere(new Vector2(7, 0), 2);
 
         boolean actual = shapeA.isCollides(shapeB);
 
@@ -94,8 +94,8 @@ public class PhysicsShapeCollisionsTest
     public void sphereWithSphereTouches()
             throws Exception
     {
-        IPhysicsShape shapeA = new Sphere(new Vector2(0,0), 2);
-        IPhysicsShape shapeB = new Sphere(new Vector2(0,5), 3);
+        IPhysicsShape shapeA = new Sphere(new Vector2(0, 0), 2);
+        IPhysicsShape shapeB = new Sphere(new Vector2(0, 5), 3);
 
         boolean actual = shapeA.isCollides(shapeB);
 
@@ -106,8 +106,56 @@ public class PhysicsShapeCollisionsTest
     public void sphereWithSphereInside()
             throws Exception
     {
-        IPhysicsShape shapeA = new Sphere(new Vector2(5,5), 5);
-        IPhysicsShape shapeB = new Sphere(new Vector2(2,4), 1);
+        IPhysicsShape shapeA = new Sphere(new Vector2(5, 5), 5);
+        IPhysicsShape shapeB = new Sphere(new Vector2(2, 4), 1);
+
+        boolean actual = shapeA.isCollides(shapeB);
+
+        Assert.assertTrue(actual);
+    }
+
+    @Test
+    public void sphereWithLineDisconnected()
+            throws Exception
+    {
+        IPhysicsShape shapeA = new Line(new Vector2(0, 0), new Vector2(10, 11));
+        IPhysicsShape shapeB = new Sphere(new Vector2(6, 3), 2);
+
+        boolean actual = shapeA.isCollides(shapeB);
+
+        Assert.assertFalse(actual);
+    }
+
+    @Test
+    public void sphereWithLineInside()
+            throws Exception
+    {
+        IPhysicsShape shapeA = new Line(new Vector2(-1, -1), new Vector2(0, 2));
+        IPhysicsShape shapeB = new Sphere(new Vector2(0, 0), 5);
+
+        boolean actual = shapeA.isCollides(shapeB);
+
+        Assert.assertTrue(actual);
+    }
+
+    @Test
+    public void sphereWithLineOnePointInside()
+            throws Exception
+    {
+        IPhysicsShape shapeA = new Line(new Vector2(-1, -1), new Vector2(100, -250));
+        IPhysicsShape shapeB = new Sphere(new Vector2(0, 0), 5);
+
+        boolean actual = shapeA.isCollides(shapeB);
+
+        Assert.assertTrue(actual);
+    }
+
+    @Test
+    public void sphereWithLineTwoPointsOutside()
+            throws Exception
+    {
+        IPhysicsShape shapeA = new Line(new Vector2(-5, -5), new Vector2(5, 5));
+        IPhysicsShape shapeB = new Sphere(new Vector2(0, 0), 5);
 
         boolean actual = shapeA.isCollides(shapeB);
 

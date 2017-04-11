@@ -5,20 +5,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class VectorUtils
 {
-    public static float distance(Vector2 vectorA, Vector2 vectorB)
-    {
-        return (float) Math.hypot(vectorA.x - vectorB.x, vectorA.y - vectorA.y);
-    }
-
     /**
-     * Given three collinear points p, q, r, the function checks if point q lies
-     * on line segment 'pr'
+     * Given three collinear points p, q, r,  checks if point q lies on line segment pr
      */
     public static boolean onSegment(Vector2 p, Vector2 q, Vector2 r)
     {
         return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) &&
                 q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);
-
     }
 
     /**
@@ -56,6 +49,13 @@ public class VectorUtils
         if (o4 == TripletOrientation.Collinear && onSegment(p2, q1, q2)) return true;
 
         return false;
+    }
+
+    public static Vector2 projectVectors(Vector2 base, Vector2 vectorToProject)
+    {
+        Vector2 baseNormalized = base.cpy().nor();
+        float projectionLength = baseNormalized.dot(vectorToProject);
+        return baseNormalized.scl(projectionLength);
     }
 
     public enum TripletOrientation

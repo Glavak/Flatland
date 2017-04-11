@@ -84,7 +84,26 @@ public class Sphere implements IViewShape, IMiniMapShape, IPhysicsShape
         if (other instanceof Sphere)
         {
             Sphere otherAsSphere = (Sphere) other;
-            return VectorUtils.distance(position, otherAsSphere.position) < radius + otherAsSphere.radius;
+            return position.dst(otherAsSphere.position) < (radius + otherAsSphere.radius);
+        }
+
+        if (other instanceof Line)
+        {
+            Line otherAsLine = (Line) other;
+
+            if(otherAsLine.getPositionStart().dst(position) < radius) return true;
+            if(otherAsLine.getPositionEnd().dst(position) < radius) return true;
+
+            Vector2 AB = otherAsLine.getPositionEnd().cpy().sub(otherAsLine.getPositionStart());
+            Vector2 AO = position.cpy().sub(otherAsLine.getPositionStart());
+
+            Vector2 projection = VectorUtils.projectVectors(AB, AO);
+            Vector2 closestPointOnLine = projection.add(otherAsLine.getPositionStart());
+
+            return closestPointOnLine.dst(position) < radius &&
+                    VectorUtils.onSegment(otherAsLine.getPositionStart(),
+                            closestPointOnLine,
+                            otherAsLine.getPositionEnd());
         }
 
         throw new RuntimeException("Not implemented shape types combination");

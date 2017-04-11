@@ -42,8 +42,8 @@ public class GameScreen extends ScreenAdapter
 
         gameWorld = new GameWorld(camera);
 
-        gameWorld.spawnObject(new StaticShape(new Sphere(new Vector2(50, 30), 2, Color.RED)));
-        gameWorld.spawnObject(new StaticShape(new Sphere(new Vector2(10, 20), 2, Color.BLUE)));
+        gameWorld.spawnObject(new StaticShape(new Sphere(new Vector2(50, 30), 10, Color.NAVY)));
+        gameWorld.spawnObject(new StaticShape(new Sphere(new Vector2(10, 20), 3, Color.MAROON)));
         gameWorld.spawnObject(new StaticShape(new Line(new Vector2(15, 30), new Vector2(20, 39), Color.FOREST)));
 
         Gdx.input.setInputProcessor(inputListener);
