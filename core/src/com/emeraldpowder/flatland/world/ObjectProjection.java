@@ -1,4 +1,6 @@
-package com.emeraldpowder.flatland.data;
+package com.emeraldpowder.flatland.world;
+
+import com.emeraldpowder.flatland.data.Angle;
 
 public class ObjectProjection
 {
@@ -10,19 +12,9 @@ public class ObjectProjection
         return angleStart;
     }
 
-    public void setAngleStart(Angle angleStart)
-    {
-        this.angleStart = angleStart;
-    }
-
     public Angle getAngleEnd()
     {
         return angleEnd;
-    }
-
-    public void setAngleEnd(Angle angleEnd)
-    {
-        this.angleEnd = angleEnd;
     }
 
     public Angle getAngleSize()

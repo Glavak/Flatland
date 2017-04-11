@@ -1,9 +1,8 @@
 package com.emeraldpowder.flatland.view;
 
-import com.badlogic.gdx.math.Vector2;
-import com.emeraldpowder.flatland.data.Angle;
+import com.emeraldpowder.flatland.data.Camera;
 
 public interface IDrawableOnView
 {
-    void draw(WorldFrame worldFrame, Vector2 viewerPosition, Angle viewingAngle);
+    void draw(WorldFrame worldFrame, Camera camera);
 }

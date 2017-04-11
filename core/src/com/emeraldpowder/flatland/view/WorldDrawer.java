@@ -1,17 +1,14 @@
 package com.emeraldpowder.flatland.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.emeraldpowder.flatland.data.Angle;
+import com.emeraldpowder.flatland.data.Camera;
 
 import java.util.List;
 
-/**
- * Created by glavak on Apr 8, 17.
- */
 public class WorldDrawer
 {
     private Pixmap pixmap;
@@ -23,20 +20,25 @@ public class WorldDrawer
         visibleFrame = new WorldFrame(length);
     }
 
-    public void createFrame(Vector2 viewerPosition, Angle viewingAngle, List<IDrawableOnView> objects)
+    public void createFrame(List<IDrawableOnView> objects, Camera camera)
     {
         visibleFrame.clear();
         for (IDrawableOnView object : objects)
         {
-            object.draw(
-                    visibleFrame,
-                    viewerPosition,
-                    viewingAngle);
+            object.draw(visibleFrame, camera);
         }
 
         for (int i = 0; i < visibleFrame.getLength(); i++)
         {
-            pixmap.drawPixel(i,0,visibleFrame.getColorBuffer()[i]);
+            pixmap.drawPixel(i, 0, visibleFrame.getColorBuffer()[i]);
+
+// Blend with z buffer a little:
+            pixmap.drawPixel(i,
+                    0,
+                    Color.rgba8888(1,
+                            1,
+                            1,
+                            visibleFrame.getZBuffer()[i]*.2f+.2f));
         }
     }
 

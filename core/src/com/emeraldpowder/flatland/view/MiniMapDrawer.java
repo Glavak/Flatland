@@ -4,9 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-/**
- * Created by glavak on Apr 9, 17.
- */
+import java.util.List;
+
 public class MiniMapDrawer
 {
     private MiniMapFrame miniMapFrame;
@@ -16,16 +15,21 @@ public class MiniMapDrawer
         miniMapFrame = new MiniMapFrame(width, height);
     }
 
-    public void createFrame()
+    public void createFrame(List<IDrawableOnMiniMap> objects)
     {
         miniMapFrame.clear();
+
+        for (IDrawableOnMiniMap object : objects)
+        {
+            object.draw(miniMapFrame);
+        }
     }
 
     public void drawFrame(SpriteBatch batch)
     {
         batch.draw(new Texture(miniMapFrame.getPixmap()),
                 (Gdx.graphics.getWidth() - miniMapFrame.getWidth()) / 2,
-                Gdx.graphics.getHeight() * 3/4,
+                Gdx.graphics.getHeight() / 4 - miniMapFrame.getHeight() / 2,
                 miniMapFrame.getWidth(), miniMapFrame.getHeight());
     }
 }

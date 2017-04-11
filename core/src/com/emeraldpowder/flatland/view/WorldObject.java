@@ -1,15 +1,15 @@
 package com.emeraldpowder.flatland.view;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
-import com.emeraldpowder.flatland.data.Angle;
-import com.emeraldpowder.flatland.data.IShape1D;
-import com.emeraldpowder.flatland.world.IWorldObject;
+import com.emeraldpowder.flatland.data.Camera;
+import com.emeraldpowder.flatland.world.shapes.IViewShape;
+import com.emeraldpowder.flatland.world.objects.IWorldObject;
 
-public class WorldObject implements IDrawableOnView
+// TODO: remove this class, it does nothing
+public class WorldObject implements IDrawableOnView, IDrawableOnMiniMap
 {
     private final IWorldObject object;
-    private final int objectColor = Color.rgba8888(Color.BLUE);
+    public int objectColor = Color.rgba8888(Color.BLUE);
 
     public WorldObject(IWorldObject object)
     {
@@ -17,13 +17,12 @@ public class WorldObject implements IDrawableOnView
     }
 
     @Override
-    public void draw(WorldFrame worldFrame, Vector2 viewerPosition, Angle viewingAngle)
+    public void draw(WorldFrame worldFrame, Camera camera)
     {
-        IShape1D objectOnScreen = object.getShape1D(viewerPosition, viewingAngle, (float) Math.PI / 3);
+        // TODO: this should go to WorldFrame
+        IViewShape objectOnScreen = object.getViewShape();
 
-        System.out.println(objectOnScreen.getXStart() + ", " + objectOnScreen.getXEnd());
-
-        float[] zBuffer = objectOnScreen.getDepth(worldFrame.getLength(), 15);
+        float[] zBuffer = objectOnScreen.getDepth(camera);
         for (int i = 0; i < worldFrame.getLength(); i++)
         {
             if (worldFrame.getZBuffer()[i] < zBuffer[i])
@@ -33,5 +32,13 @@ public class WorldObject implements IDrawableOnView
                 worldFrame.getColorBuffer()[i] = objectColor;
             }
         }
+    }
+
+    @Override
+    public void draw(MiniMapFrame miniMapFrame)
+    {
+        // TODO: And color management to IWorldObject + ColorManager
+        miniMapFrame.getPixmap().setColor(objectColor);
+        object.getMiniMapShape().draw(miniMapFrame);
     }
 }

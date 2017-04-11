@@ -25,6 +25,14 @@ public class Angle
         return direction.angle();
     }
 
+    /**
+     * @param angle angle in rads
+     */
+    public void set(float angle)
+    {
+        direction.set(MathUtils.cos(angle), MathUtils.sin(angle));
+    }
+
     @Override
     public String toString()
     {
