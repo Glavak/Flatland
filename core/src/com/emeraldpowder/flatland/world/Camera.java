@@ -8,14 +8,8 @@ public class Camera
     private float fieldOfView = (float) Math.PI / 4;
     private float farCullingLine = 50;
 
-    private Vector2 position = new Vector2(0,0);
+    private Vector2 position = new Vector2(0, 0);
     private Angle viewingAngle = new Angle(0);
-    private int screenLength;
-
-    public Camera(int screenLength)
-    {
-        this.screenLength = screenLength;
-    }
 
     public float getFieldOfView()
     {
@@ -58,25 +52,9 @@ public class Camera
     }
 
     /**
-     * @return screen length in pixels, for which camera is set up
-     */
-    public int getScreenLength()
-    {
-        return screenLength;
-    }
-
-    /**
-     * Sets up camera screen length
-     * @param screenLength screen length in pixels
-     */
-    public void setScreenLength(int screenLength)
-    {
-        this.screenLength = screenLength;
-    }
-
-    /**
      * Converts absolute object projection to camera circle (which should be generated
      * depending on shape and camera position) to relative projection to 1d-screen
+     *
      * @return ObjectBounds object, containing start and end of object at 1d-screen
      */
     public ObjectBounds getObjectBounds(ObjectProjection projection)

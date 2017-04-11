@@ -2,16 +2,19 @@ package com.emeraldpowder.flatland.world.shapes;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.emeraldpowder.flatland.data.Angle;
+import com.emeraldpowder.flatland.data.VectorUtils;
 import com.emeraldpowder.flatland.view.IMiniMapFrame;
-import com.emeraldpowder.flatland.view.WorldFrame;
+import com.emeraldpowder.flatland.view.ViewFrame;
 import com.emeraldpowder.flatland.world.Camera;
 import com.emeraldpowder.flatland.world.ObjectBounds;
 import com.emeraldpowder.flatland.world.ObjectProjection;
 
-public class Sphere implements IViewShape, IMiniMapShape
+public class Sphere implements IViewShape, IMiniMapShape, IPhysicsShape
 {
+    private boolean trigger = false;
     private Vector2 position;
     private float radius;
     private Color color;
@@ -23,27 +26,33 @@ public class Sphere implements IViewShape, IMiniMapShape
         this.color = color;
     }
 
+    public Sphere(Vector2 position, float radius)
+    {
+        this.position = position;
+        this.radius = radius;
+        this.color = Color.WHITE;
+    }
+
     @Override
-    public void drawOnView(WorldFrame worldFrame, Camera camera)
+    public void drawOnView(ViewFrame viewFrame, Camera camera)
     {
         ObjectProjection projection = getObjectProjection(camera.getPosition());
 
         ObjectBounds objectBounds = camera.getObjectBounds(projection);
         float distanceToCenter = camera.getPosition().cpy().sub(position).len();
 
-        int pixelStart = (int) (objectBounds.getXStart() * camera.getScreenLength());
-        int pixelEnd = (int) (objectBounds.getXEnd() * camera.getScreenLength());
+        int pixelStart = (int) (objectBounds.getXStart() * viewFrame.getLength());
+        int pixelEnd = (int) (objectBounds.getXEnd() * viewFrame.getLength());
         int pixelLength = pixelEnd - pixelStart;
 
-
-        worldFrame.setColor(color);
-        for (int i = Math.max(pixelStart, 0); i < Math.min(pixelEnd, camera.getScreenLength()); i++)
+        viewFrame.setColor(color);
+        for (int i = Math.max(pixelStart, 0); i < Math.min(pixelEnd, viewFrame.getLength()); i++)
         {
             float position0to1 = (float) (i - pixelStart) / pixelLength;
             float angle = (float) Math.acos(position0to1 * 2 - 1);
             float depth = MathUtils.sin(angle) * radius;
 
-            worldFrame.drawPixel(i, 1f - (distanceToCenter - depth) / camera.getFarCullingLine());
+            viewFrame.drawPixel(i, 1f - (distanceToCenter - depth) / camera.getFarCullingLine());
         }
     }
 
@@ -65,5 +74,39 @@ public class Sphere implements IViewShape, IMiniMapShape
     {
         miniMapFrame.setColor(color);
         miniMapFrame.drawCircle(position, radius);
+    }
+
+    @Override
+    public boolean isCollides(IPhysicsShape other)
+    {
+        if (!getBoundingBox().overlaps(other.getBoundingBox())) return false;
+
+        if (other instanceof Sphere)
+        {
+            Sphere otherAsSphere = (Sphere) other;
+            return VectorUtils.distance(position, otherAsSphere.position) < radius + otherAsSphere.radius;
+        }
+
+        throw new RuntimeException("Not implemented shape types combination");
+    }
+
+    @Override
+    public Rectangle getBoundingBox()
+    {
+        return new Rectangle(
+                position.x - radius, position.y - radius,
+                radius * 2, radius * 2);
+    }
+
+    @Override
+    public boolean isTrigger()
+    {
+        return trigger;
+    }
+
+    @Override
+    public void setTrigger(boolean trigger)
+    {
+        this.trigger = trigger;
     }
 }

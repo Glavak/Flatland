@@ -1,15 +1,16 @@
 package com.emeraldpowder.flatland.world.objects;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.emeraldpowder.flatland.world.Camera;
-import com.emeraldpowder.flatland.world.shapes.IMiniMapShape;
-import com.emeraldpowder.flatland.world.shapes.IViewShape;
-import com.emeraldpowder.flatland.world.shapes.SphereWithCone;
+import com.emeraldpowder.flatland.world.GameWorld;
+import com.emeraldpowder.flatland.world.shapes.*;
 
 public class Player implements IWorldObject
 {
     final private float radius = 2;
     private Camera boundCamera;
+    private GameWorld parentWorld;
 
     public Player(Camera boundCamera)
     {
@@ -22,12 +23,36 @@ public class Player implements IWorldObject
 
     }
 
+    @Override
+    public GameWorld getWorld()
+    {
+        return parentWorld;
+    }
+
+    @Override
+    public void setWorld(GameWorld world)
+    {
+        parentWorld = world;
+    }
+
     public void move(float rotation, float forward, float right)
     {
         boundCamera.getAngle().addRotation(rotation);
 
-        boundCamera.getPosition().add(boundCamera.getAngle().getDirection().cpy().scl(forward));
-        boundCamera.getPosition().add(boundCamera.getAngle().getDirection().cpy().rotate90(1).scl(right));
+        Vector2 forwardMove = boundCamera.getAngle().getDirection().cpy().scl(forward);
+        Vector2 rightMove = boundCamera.getAngle().getDirection().cpy().rotate90(1).scl(right);
+
+        boundCamera.getPosition().add(forwardMove);
+        if (parentWorld.isAnythingCollidesWithObject(this))
+        {
+            boundCamera.getPosition().sub(forwardMove);
+        }
+
+        boundCamera.getPosition().add(rightMove);
+        if (parentWorld.isAnythingCollidesWithObject(this))
+        {
+            boundCamera.getPosition().sub(rightMove);
+        }
     }
 
     @Override
@@ -45,5 +70,11 @@ public class Player implements IWorldObject
                 boundCamera.getFarCullingLine(),
                 boundCamera.getAngle(),
                 boundCamera.getFieldOfView(), Color.WHITE);
+    }
+
+    @Override
+    public IPhysicsShape getPhysicsShape()
+    {
+        return new Sphere(boundCamera.getPosition(), radius);
     }
 }

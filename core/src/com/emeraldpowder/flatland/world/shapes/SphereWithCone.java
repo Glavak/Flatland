@@ -23,10 +23,10 @@ public class SphereWithCone implements IMiniMapShape
     {
         this.position = position;
         this.radius = radius;
-        this.color = color;
         this.coneDirection = viewingDirection.getDirection().scl(coneSize);
         this.coneWidth = coneWidth;
         this.coneDirection.rotateRad(-coneWidth / 2);
+        this.color = color;
     }
 
     @Override

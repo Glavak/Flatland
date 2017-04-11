@@ -5,32 +5,36 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.emeraldpowder.flatland.world.Camera;
+import com.emeraldpowder.flatland.world.GameWorld;
 import com.emeraldpowder.flatland.world.objects.IWorldObject;
 import com.emeraldpowder.flatland.world.shapes.IViewShape;
 
-import java.util.List;
-
-class WorldDrawer
+class ViewDrawer
 {
     private Pixmap pixmap;
-    private WorldFrame visibleFrame;
+    private ViewFrame visibleFrame;
 
-    WorldDrawer(int length)
+    ViewDrawer(int length)
     {
         pixmap = new Pixmap(length, 1, Pixmap.Format.RGB888);
-        visibleFrame = new WorldFrame(length);
+        visibleFrame = new ViewFrame(length);
     }
 
-    void createFrame(List<IWorldObject> objects, Camera camera)
+    void setFrameLength(int length)
+    {
+        pixmap = new Pixmap(length, 1, Pixmap.Format.RGB888);
+        visibleFrame.resize(length);
+    }
+
+    void createFrame(GameWorld world)
     {
         visibleFrame.clear();
-        for (IWorldObject object : objects)
+        for (IWorldObject object : world.getObjects())
         {
             IViewShape shape = object.getViewShape();
             if (shape != null)
             {
-                shape.drawOnView(visibleFrame, camera);
+                shape.drawOnView(visibleFrame, world.getCamera());
             }
         }
 
@@ -40,13 +44,13 @@ class WorldDrawer
 
             // Blend with z buffer a little:
             pixmap.drawPixel(i, 0, Color.rgba8888(
-                    1, 1, 1, visibleFrame.getZBuffer()[i] * .2f + .2f));
+                    1, 1, 1, .45f - visibleFrame.getZBuffer()[i] * .3f));
         }
     }
 
     void drawFrame(SpriteBatch batch)
     {
-        final float height = 10;
+        final float height = 15;
 
         batch.draw(new Texture(pixmap),
                 0, (Gdx.graphics.getHeight() - height) / 2,

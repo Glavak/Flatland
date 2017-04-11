@@ -2,13 +2,18 @@ package com.emeraldpowder.flatland.view;
 
 import com.badlogic.gdx.graphics.Color;
 
-public class WorldFrame implements IWorldFrame
+public class ViewFrame implements IViewFrame
 {
     private float zBuffer[];
     private int colorBuffer[];
     private int colorToDraw;
 
-    WorldFrame(int length)
+    ViewFrame(int length)
+    {
+        resize(length);
+    }
+
+    void resize(int length)
     {
         zBuffer = new float[length];
         colorBuffer = new int[length];
@@ -36,8 +41,14 @@ public class WorldFrame implements IWorldFrame
     @Override
     public void drawPixel(int x, float depth)
     {
-        if (depth < 0f) depth = 0f;
-        else if (depth > 1f) depth = 1f;
+        if (depth < 0f)
+        {
+            depth = 0f;
+        }
+        else if (depth > 1f)
+        {
+            depth = 1f;
+        }
 
         if (zBuffer[x] < depth)
         {

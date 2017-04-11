@@ -4,7 +4,7 @@ public class ObjectBounds
 {
     private float xStart;
     private float xEnd;
-    
+
     public ObjectBounds(float xStart, float xEnd)
     {
         this.xStart = xStart;
