@@ -1,8 +1,8 @@
 package com.emeraldpowder.flatland.world.shapes;
 
-import com.emeraldpowder.flatland.view.MiniMapFrame;
+import com.emeraldpowder.flatland.view.IMiniMapFrame;
 
 public interface IMiniMapShape
 {
-    void draw(MiniMapFrame miniMapFrame);
+    void drawOnMiniMap(IMiniMapFrame miniMapFrame);
 }

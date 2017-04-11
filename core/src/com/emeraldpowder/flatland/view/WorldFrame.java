@@ -2,39 +2,57 @@ package com.emeraldpowder.flatland.view;
 
 import com.badlogic.gdx.graphics.Color;
 
-/**
- * Created by glavak on Apr 8, 17.
- */
-public class WorldFrame
+public class WorldFrame implements IWorldFrame
 {
     private float zBuffer[];
     private int colorBuffer[];
+    private int colorToDraw;
 
-    public WorldFrame(int length)
+    WorldFrame(int length)
     {
         zBuffer = new float[length];
         colorBuffer = new int[length];
     }
 
-    public void clear()
+    void clear()
     {
         for (int i = 0; i < zBuffer.length; i++)
         {
             zBuffer[i] = 0;
-            colorBuffer[i] = Color.argb8888(Color.WHITE);
+            colorBuffer[i] = Color.rgba8888(Color.WHITE);
         }
     }
 
-    public float[] getZBuffer()
+    float[] getZBuffer()
     {
         return zBuffer;
     }
 
-    public int[] getColorBuffer()
+    int[] getColorBuffer()
     {
         return colorBuffer;
     }
 
+    @Override
+    public void drawPixel(int x, float depth)
+    {
+        if (depth < 0f) depth = 0f;
+        else if (depth > 1f) depth = 1f;
+
+        if (zBuffer[x] < depth)
+        {
+            zBuffer[x] = depth;
+            colorBuffer[x] = colorToDraw;
+        }
+    }
+
+    @Override
+    public void setColor(Color color)
+    {
+        colorToDraw = Color.rgba8888(color);
+    }
+
+    @Override
     public int getLength()
     {
         return zBuffer.length;

@@ -1,18 +1,13 @@
 package com.emeraldpowder.flatland.world.shapes;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.emeraldpowder.flatland.data.Angle;
-import com.emeraldpowder.flatland.view.MiniMapFrame;
+import com.emeraldpowder.flatland.view.IMiniMapFrame;
 
 public class SphereWithCone implements IMiniMapShape
 {
-    /**
-     * Position of sphere in world coordinates
-     */
     private Vector2 position;
-    /**
-     * Radius of circle in world coordinates
-     */
     private float radius;
     /**
      * Angle and size at which center of cone points
@@ -22,19 +17,22 @@ public class SphereWithCone implements IMiniMapShape
      * Size (width) of cone in radians
      */
     private float coneWidth;
+    private Color color;
 
-    public SphereWithCone(Vector2 position, float radius, float coneSize, Angle viewingDirection, float coneWidth)
+    public SphereWithCone(Vector2 position, float radius, float coneSize, Angle viewingDirection, float coneWidth, Color color)
     {
         this.position = position;
         this.radius = radius;
-        this.coneDirection = viewingDirection.getDirection().cpy().scl(coneSize);
+        this.color = color;
+        this.coneDirection = viewingDirection.getDirection().scl(coneSize);
         this.coneWidth = coneWidth;
         this.coneDirection.rotateRad(-coneWidth / 2);
     }
 
     @Override
-    public void draw(MiniMapFrame miniMapFrame)
+    public void drawOnMiniMap(IMiniMapFrame miniMapFrame)
     {
+        miniMapFrame.setColor(color);
         miniMapFrame.drawCircle(position, radius);
 
         miniMapFrame.drawLine(position, position.cpy().add(coneDirection));

@@ -7,6 +7,12 @@ public class ObjectProjection
     private Angle angleStart;
     private Angle angleEnd;
 
+    public ObjectProjection(Angle angleStart, Angle angleEnd)
+    {
+        this.angleStart = angleStart;
+        this.angleEnd = angleEnd;
+    }
+
     public Angle getAngleStart()
     {
         return angleStart;
@@ -22,9 +28,9 @@ public class ObjectProjection
         return new Angle(angleEnd.getRadians() - angleStart.getRadians());
     }
 
-    public ObjectProjection(Angle angleStart, Angle angleEnd)
+    @Override
+    public String toString()
     {
-        this.angleStart = angleStart;
-        this.angleEnd = angleEnd;
+        return "ObjectProjection(" + angleStart + " - " + angleEnd + ")";
     }
 }

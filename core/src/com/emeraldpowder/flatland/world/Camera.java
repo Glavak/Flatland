@@ -1,6 +1,7 @@
-package com.emeraldpowder.flatland.data;
+package com.emeraldpowder.flatland.world;
 
 import com.badlogic.gdx.math.Vector2;
+import com.emeraldpowder.flatland.data.Angle;
 
 public class Camera
 {
@@ -71,5 +72,24 @@ public class Camera
     public void setScreenLength(int screenLength)
     {
         this.screenLength = screenLength;
+    }
+
+    /**
+     * Converts absolute object projection to camera circle (which should be generated
+     * depending on shape and camera position) to relative projection to 1d-screen
+     * @return ObjectBounds object, containing start and end of object at 1d-screen
+     */
+    public ObjectBounds getObjectBounds(ObjectProjection projection)
+    {
+        Angle objectStartRelativeToViewingAngle = new Angle(
+                -viewingAngle.getRadians() + projection.getAngleStart().getRadians()
+        );
+        Angle objectEndRelativeToViewingAngle = new Angle(
+                -viewingAngle.getRadians() + projection.getAngleEnd().getRadians()
+        );
+
+        float xStart = 0.5f + objectStartRelativeToViewingAngle.getRadians() / fieldOfView;
+        float xEnd = 0.5f + objectEndRelativeToViewingAngle.getRadians() / fieldOfView;
+        return new ObjectBounds(xStart, xEnd);
     }
 }

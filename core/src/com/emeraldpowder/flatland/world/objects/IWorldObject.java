@@ -6,9 +6,6 @@ import com.emeraldpowder.flatland.world.shapes.IViewShape;
 
 public interface IWorldObject
 {
-    Vector2 getPosition();
-    void setPosition(Vector2 position);
-
     void act(float deltaTime);
 
     /**

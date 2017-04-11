@@ -1,67 +1,50 @@
 package com.emeraldpowder.flatland.world.shapes;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.emeraldpowder.flatland.data.Angle;
-import com.emeraldpowder.flatland.data.Camera;
-import com.emeraldpowder.flatland.view.MiniMapFrame;
+import com.emeraldpowder.flatland.view.IMiniMapFrame;
+import com.emeraldpowder.flatland.view.WorldFrame;
+import com.emeraldpowder.flatland.world.Camera;
 import com.emeraldpowder.flatland.world.ObjectBounds;
 import com.emeraldpowder.flatland.world.ObjectProjection;
 
 public class Sphere implements IViewShape, IMiniMapShape
 {
-    /**
-     * Position of sphere in world coordinates
-     */
     private Vector2 position;
-    /**
-     * Radius of circle in world coordinates
-     */
     private float radius;
+    private Color color;
 
-    public Sphere(Vector2 position, float radius)
+    public Sphere(Vector2 position, float radius, Color color)
     {
         this.position = position;
         this.radius = radius;
+        this.color = color;
     }
 
     @Override
-    public float[] getDepth(Camera camera)
-    {
-        ObjectBounds objectBounds = getObjectBounds(camera);
-        float distanceToCenter = camera.getPosition().cpy().sub(position).len();
-
-        int circleStart = (int) (objectBounds.getXStart() * camera.getScreenLength());
-        int circleEnd = (int) (objectBounds.getXEnd() * camera.getScreenLength());
-        int circleLength = circleEnd - circleStart;
-
-        float[] result = new float[camera.getScreenLength()];
-        for (int i = Math.max(circleStart, 0); i < Math.min(circleEnd, camera.getScreenLength()); i++)
-        {
-            float position0to1 = (float) (i - circleStart) / circleLength;
-            float angle = (float) Math.acos(position0to1 * 2 - 1);
-            float depth = MathUtils.sin(angle) * radius;
-            //TODO: clamp
-            result[i] = 1f - (distanceToCenter - depth) / camera.getFarCullingLine();
-        }
-        return result;
-    }
-
-    @Override
-    public ObjectBounds getObjectBounds(Camera camera)
+    public void drawOnView(WorldFrame worldFrame, Camera camera)
     {
         ObjectProjection projection = getObjectProjection(camera.getPosition());
 
-        Angle objectStartRelativeToViewingAngle = new Angle(
-                -camera.getAngle().getRadians() + projection.getAngleStart().getRadians()
-        );
-        Angle objectEndRelativeToViewingAngle = new Angle(
-                -camera.getAngle().getRadians() + projection.getAngleEnd().getRadians()
-        );
+        ObjectBounds objectBounds = camera.getObjectBounds(projection);
+        float distanceToCenter = camera.getPosition().cpy().sub(position).len();
 
-        float xStart = 0.5f + objectStartRelativeToViewingAngle.getRadians() / camera.getFieldOfView();
-        float xEnd = 0.5f + objectEndRelativeToViewingAngle.getRadians() / camera.getFieldOfView();
-        return new ObjectBounds(xStart, xEnd);
+        int pixelStart = (int) (objectBounds.getXStart() * camera.getScreenLength());
+        int pixelEnd = (int) (objectBounds.getXEnd() * camera.getScreenLength());
+        int pixelLength = pixelEnd - pixelStart;
+
+
+        worldFrame.setColor(color);
+        for (int i = Math.max(pixelStart, 0); i < Math.min(pixelEnd, camera.getScreenLength()); i++)
+        {
+            float position0to1 = (float) (i - pixelStart) / pixelLength;
+            float angle = (float) Math.acos(position0to1 * 2 - 1);
+            float depth = MathUtils.sin(angle) * radius;
+
+            worldFrame.drawPixel(i, 1f - (distanceToCenter - depth) / camera.getFarCullingLine());
+        }
     }
 
     @Override
@@ -78,8 +61,9 @@ public class Sphere implements IViewShape, IMiniMapShape
     }
 
     @Override
-    public void draw(MiniMapFrame miniMapFrame)
+    public void drawOnMiniMap(IMiniMapFrame miniMapFrame)
     {
+        miniMapFrame.setColor(color);
         miniMapFrame.drawCircle(position, radius);
     }
 }

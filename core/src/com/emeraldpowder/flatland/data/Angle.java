@@ -15,6 +15,36 @@ public class Angle
         this.direction = new Vector2(MathUtils.cos(angle), MathUtils.sin(angle));
     }
 
+    /**
+     * @param direction vector, angle between which and 0X will be used
+     */
+    public Angle(Vector2 direction)
+    {
+        this.direction = direction.cpy();
+    }
+
+    /**
+     * Counts angle between vectors
+     *
+     * @param angleA from this vector
+     * @param angleB to this
+     * @return angle between vectors in rads, (-Pi to Pi)
+     */
+    public static float between(Angle angleA, Angle angleB)
+    {
+        return angleB.direction.angle(angleA.direction);
+    }
+
+    /**
+     * Swaps values of two angles
+     */
+    public static void swap(Angle angleA, Angle angleB)
+    {
+        Vector2 tmp = angleA.direction;
+        angleA.direction = angleB.direction;
+        angleB.direction = tmp;
+    }
+
     public float getRadians()
     {
         return direction.angleRad();
@@ -41,7 +71,7 @@ public class Angle
 
     public Vector2 getDirection()
     {
-        return direction;
+        return direction.cpy();
     }
 
     /**
@@ -53,12 +83,4 @@ public class Angle
     {
         direction.rotateRad(angle);
     }
-
-    /*public static Angle angleDifference(Angle angleA, Angle angleB)
-    {
-        float phi = Math.abs(angleA.getRadians() - angleB.getRadians());
-        if (phi > Math.PI * 2) phi -= Math.PI * 2;
-
-        return phi
-    }*/
 }

@@ -3,6 +3,8 @@ package com.emeraldpowder.flatland.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.emeraldpowder.flatland.world.objects.IWorldObject;
+import com.emeraldpowder.flatland.world.shapes.IMiniMapShape;
 
 import java.util.List;
 
@@ -15,13 +17,17 @@ public class MiniMapDrawer
         miniMapFrame = new MiniMapFrame(width, height);
     }
 
-    public void createFrame(List<IDrawableOnMiniMap> objects)
+    public void createFrame(List<IWorldObject> objects)
     {
         miniMapFrame.clear();
 
-        for (IDrawableOnMiniMap object : objects)
+        for (IWorldObject object : objects)
         {
-            object.draw(miniMapFrame);
+            IMiniMapShape shape = object.getMiniMapShape();
+            if (shape != null)
+            {
+                shape.drawOnMiniMap(miniMapFrame);
+            }
         }
     }
 

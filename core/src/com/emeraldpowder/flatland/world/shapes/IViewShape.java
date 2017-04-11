@@ -1,23 +1,16 @@
 package com.emeraldpowder.flatland.world.shapes;
 
 import com.badlogic.gdx.math.Vector2;
-import com.emeraldpowder.flatland.data.Camera;
-import com.emeraldpowder.flatland.world.ObjectBounds;
+import com.emeraldpowder.flatland.view.WorldFrame;
+import com.emeraldpowder.flatland.world.Camera;
 import com.emeraldpowder.flatland.world.ObjectProjection;
 
 public interface IViewShape
 {
     /**
-     * @param camera
-     * @return depth buffer, containing distances from object to viewer for each pixel
+     * Draws this object on given worldFrame, using given camera
      */
-    float[] getDepth(Camera camera);
-
-    /**
-     * @param camera
-     * @return ObjectBounds object, containing screen bounds of object
-     */
-    ObjectBounds getObjectBounds(Camera camera);
+    void drawOnView(WorldFrame worldFrame, Camera camera);
 
     /**
      * @param viewerPosition camera position

@@ -1,8 +1,7 @@
 package com.emeraldpowder.flatland.world.objects;
 
-import com.badlogic.gdx.math.Vector2;
-import com.emeraldpowder.flatland.data.Camera;
-import com.emeraldpowder.flatland.world.shapes.Empty;
+import com.badlogic.gdx.graphics.Color;
+import com.emeraldpowder.flatland.world.Camera;
 import com.emeraldpowder.flatland.world.shapes.IMiniMapShape;
 import com.emeraldpowder.flatland.world.shapes.IViewShape;
 import com.emeraldpowder.flatland.world.shapes.SphereWithCone;
@@ -15,18 +14,6 @@ public class Player implements IWorldObject
     public Player(Camera boundCamera)
     {
         this.boundCamera = boundCamera;
-    }
-
-    @Override
-    public Vector2 getPosition()
-    {
-        return boundCamera.getPosition();
-    }
-
-    @Override
-    public void setPosition(Vector2 position)
-    {
-        boundCamera.setPosition(position);
     }
 
     @Override
@@ -46,17 +33,17 @@ public class Player implements IWorldObject
     @Override
     public IViewShape getViewShape()
     {
-        return new Empty();
+        return null;
     }
 
     @Override
     public IMiniMapShape getMiniMapShape()
     {
         return new SphereWithCone(
-                getPosition(),
+                boundCamera.getPosition(),
                 radius,
                 boundCamera.getFarCullingLine(),
                 boundCamera.getAngle(),
-                boundCamera.getFieldOfView());
+                boundCamera.getFieldOfView(), Color.WHITE);
     }
 }

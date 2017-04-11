@@ -5,16 +5,13 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-/**
- * Created by glavak on Apr 9, 17.
- */
-public class MiniMapFrame
+public class MiniMapFrame implements IMiniMapFrame
 {
     private int width;
     private int height;
     private Pixmap pixmap;
 
-    public MiniMapFrame(int width, int height)
+    MiniMapFrame(int width, int height)
     {
         this.width = width;
         this.height = height;
@@ -22,26 +19,27 @@ public class MiniMapFrame
         pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
     }
 
+    @Override
     public int getWidth()
     {
         return width;
     }
 
+    @Override
     public int getHeight()
     {
         return height;
     }
 
-    public Pixmap getPixmap()
+    Pixmap getPixmap()
     {
         return pixmap;
     }
 
-    public void clear()
+    void clear()
     {
         pixmap.setColor(Color.CLEAR);
         pixmap.fill();
-
 
         pixmap.setColor(.2f, .2f, .2f, .2f);
         pixmap.fill();
@@ -50,6 +48,7 @@ public class MiniMapFrame
         pixmap.drawRectangle(0, 0, getWidth(), getHeight());
     }
 
+    @Override
     public void drawCircle(Vector2 center, float radius)
     {
         center = worldToMiniMap(center);
@@ -59,6 +58,7 @@ public class MiniMapFrame
                 MathUtils.round(radius));
     }
 
+    @Override
     public void drawLine(Vector2 start, Vector2 end)
     {
         start = worldToMiniMap(start);
@@ -70,8 +70,15 @@ public class MiniMapFrame
                 MathUtils.round(end.y));
     }
 
+    @Override
     public Vector2 worldToMiniMap(Vector2 world)
     {
         return new Vector2(world.x, /*getHeight() -*/ world.y);
+    }
+
+    @Override
+    public void setColor(Color color)
+    {
+        pixmap.setColor(color);
     }
 }
