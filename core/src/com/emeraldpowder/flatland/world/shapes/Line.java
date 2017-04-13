@@ -1,6 +1,7 @@
 package com.emeraldpowder.flatland.world.shapes;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.emeraldpowder.flatland.data.Angle;
@@ -18,16 +19,6 @@ public class Line implements IViewShape, IMiniMapShape, IPhysicsShape
     private Color color;
     private boolean trigger = false;
 
-    public Vector2 getPositionStart()
-    {
-        return positionStart;
-    }
-
-    public Vector2 getPositionEnd()
-    {
-        return positionEnd;
-    }
-
     public Line(Vector2 positionStart, Vector2 positionEnd, Color color)
     {
         this.positionStart = positionStart;
@@ -42,14 +33,29 @@ public class Line implements IViewShape, IMiniMapShape, IPhysicsShape
         this.color = Color.WHITE;
     }
 
+    public Vector2 getPositionStart()
+    {
+        return positionStart;
+    }
+
+    public Vector2 getPositionEnd()
+    {
+        return positionEnd;
+    }
+
     @Override
     public void drawOnView(ViewFrame viewFrame, Camera camera)
     {
         LineObjectProjection projection = getObjectProjection(camera.getPosition());
-
         ObjectBounds objectBounds = camera.getObjectBounds(projection);
-        float distanceToStart = camera.getPosition().cpy().sub(positionStart).len();
+
         float distanceToEnd = camera.getPosition().cpy().sub(positionEnd).len();
+
+        double alpha = camera.getPosition().cpy().sub(positionEnd).angleRad(positionStart.cpy().sub(positionEnd));
+        if (projection.isInverted) alpha = -alpha;
+        double sinAlpha = Math.sin(alpha);
+
+        double betaTotal = projection.getAngleSize().getRadians();
 
         int pixelStart = (int) (objectBounds.getXStart() * viewFrame.getLength());
         int pixelEnd = (int) (objectBounds.getXEnd() * viewFrame.getLength());
@@ -58,17 +64,19 @@ public class Line implements IViewShape, IMiniMapShape, IPhysicsShape
         viewFrame.setColor(color);
         for (int i = Math.max(pixelStart, 0); i < Math.min(pixelEnd, viewFrame.getLength()); i++)
         {
-            float position0to1 = (float) (i - pixelStart) / pixelLength;
-            float distance;
+            double position0to1 = (double) (i - pixelStart) / pixelLength;
 
+            double beta;
             if (projection.isInverted)
             {
-                distance = distanceToEnd * (1 - position0to1) + distanceToStart * position0to1;
+                beta = betaTotal * position0to1;
             }
             else
             {
-                distance = distanceToEnd * position0to1 + distanceToStart * (1 - position0to1);
+                beta = betaTotal * (1 - position0to1);
             }
+
+            float distance = (float) (sinAlpha * distanceToEnd / Math.sin(Math.PI - alpha - beta));
 
             viewFrame.drawPixel(i, 1f - distance / camera.getFarCullingLine());
         }

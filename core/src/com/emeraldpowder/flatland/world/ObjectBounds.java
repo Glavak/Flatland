@@ -11,6 +11,12 @@ public class ObjectBounds
         this.xEnd = xEnd;
     }
 
+    @Override
+    public String toString()
+    {
+        return "ObjectBounds(" + xStart + " - " + xEnd + ')';
+    }
+
     /**
      * @return Coordinate of object's starting edge, in screen coordinates (0 to 1)
      */

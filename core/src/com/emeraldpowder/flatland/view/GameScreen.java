@@ -14,11 +14,11 @@ import com.emeraldpowder.flatland.world.shapes.Sphere;
 
 public class GameScreen extends ScreenAdapter
 {
-    private final float movementSensitivity = 20f;
-    private final float rotationSensitivity = .05f;
+    private final float movementSensitivity = 30f;
+    private final float rotationSensitivity = .04f;
 
     private SpriteBatch batch;
-    private ViewDrawer viewDrawer;
+    private IViewDrawer IViewDrawer;
     private MiniMapDrawer miniMapDrawer;
 
     private GameWorld gameWorld;
@@ -33,7 +33,7 @@ public class GameScreen extends ScreenAdapter
     public void show()
     {
         batch = new SpriteBatch();
-        viewDrawer = new ViewDrawer(Gdx.graphics.getWidth());
+        IViewDrawer = new ViewDrawerFlat(Gdx.graphics.getWidth());
         miniMapDrawer = new MiniMapDrawer(300, 200);
 
         Camera camera = new Camera();
@@ -42,9 +42,12 @@ public class GameScreen extends ScreenAdapter
 
         gameWorld = new GameWorld(camera);
 
-        gameWorld.spawnObject(new StaticShape(new Sphere(new Vector2(50, 30), 10, Color.NAVY)));
-        gameWorld.spawnObject(new StaticShape(new Sphere(new Vector2(10, 20), 3, Color.MAROON)));
+        gameWorld.spawnObject(new StaticShape(new Sphere(new Vector2(50, 30), 10, Color.BLUE)));
+        gameWorld.spawnObject(new StaticShape(new Sphere(new Vector2(10, 20), 3, Color.RED)));
         gameWorld.spawnObject(new StaticShape(new Line(new Vector2(15, 30), new Vector2(20, 39), Color.FOREST)));
+
+        gameWorld.spawnObject(new StaticShape(new Line(new Vector2(15, 30), new Vector2(20, 150), Color.PURPLE)));
+        gameWorld.spawnObject(new StaticShape(new Sphere(new Vector2(200,100),80, Color.BROWN)));
 
         Gdx.input.setInputProcessor(inputListener);
         Gdx.input.setCursorCatched(true);
@@ -53,16 +56,16 @@ public class GameScreen extends ScreenAdapter
     @Override
     public void render(float delta)
     {
-        Gdx.gl.glClearColor(.03f, .03f, .03f, 1);
+        Gdx.gl.glClearColor(.1f, .1f, .1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         act(delta);
 
-        viewDrawer.createFrame(gameWorld);
+        IViewDrawer.createFrame(gameWorld);
         miniMapDrawer.createFrame(gameWorld);
 
         batch.begin();
-        viewDrawer.drawFrame(batch);
+        IViewDrawer.drawFrame(batch);
         miniMapDrawer.drawFrame(batch);
         batch.end();
     }
@@ -78,7 +81,7 @@ public class GameScreen extends ScreenAdapter
     @Override
     public void resize(int width, int height)
     {
-        viewDrawer.setFrameLength(width);
+        IViewDrawer.setFrameLength(width);
 
         batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
     }

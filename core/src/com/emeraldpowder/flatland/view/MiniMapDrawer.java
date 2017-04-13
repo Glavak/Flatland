@@ -7,16 +7,16 @@ import com.emeraldpowder.flatland.world.GameWorld;
 import com.emeraldpowder.flatland.world.objects.IWorldObject;
 import com.emeraldpowder.flatland.world.shapes.IMiniMapShape;
 
-public class MiniMapDrawer
+class MiniMapDrawer
 {
     private MiniMapFrame miniMapFrame;
 
-    public MiniMapDrawer(int width, int height)
+    MiniMapDrawer(int width, int height)
     {
         miniMapFrame = new MiniMapFrame(width, height);
     }
 
-    public void createFrame(GameWorld world)
+    void createFrame(GameWorld world)
     {
         miniMapFrame.clear();
 
@@ -30,7 +30,7 @@ public class MiniMapDrawer
         }
     }
 
-    public void drawFrame(SpriteBatch batch)
+    void drawFrame(SpriteBatch batch)
     {
         batch.draw(new Texture(miniMapFrame.getPixmap()),
                 (Gdx.graphics.getWidth() - miniMapFrame.getWidth()) / 2,

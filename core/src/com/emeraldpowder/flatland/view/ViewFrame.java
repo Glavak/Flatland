@@ -24,7 +24,7 @@ public class ViewFrame implements IViewFrame
         for (int i = 0; i < zBuffer.length; i++)
         {
             zBuffer[i] = 0;
-            colorBuffer[i] = Color.rgba8888(Color.WHITE);
+            colorBuffer[i] = Color.rgba8888(Color.BLACK);
         }
     }
 
@@ -43,11 +43,11 @@ public class ViewFrame implements IViewFrame
     {
         if (depth < 0f)
         {
-            depth = 0f;
+            return;
         }
         else if (depth > 1f)
         {
-            depth = 1f;
+            return;
         }
 
         if (zBuffer[x] < depth)

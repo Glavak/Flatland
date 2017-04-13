@@ -9,24 +9,26 @@ import com.emeraldpowder.flatland.world.GameWorld;
 import com.emeraldpowder.flatland.world.objects.IWorldObject;
 import com.emeraldpowder.flatland.world.shapes.IViewShape;
 
-class ViewDrawer
+class ViewDrawerFlat implements IViewDrawer
 {
     private Pixmap pixmap;
     private ViewFrame visibleFrame;
 
-    ViewDrawer(int length)
+    ViewDrawerFlat(int length)
     {
         pixmap = new Pixmap(length, 1, Pixmap.Format.RGB888);
         visibleFrame = new ViewFrame(length);
     }
 
-    void setFrameLength(int length)
+    @Override
+    public void setFrameLength(int length)
     {
         pixmap = new Pixmap(length, 1, Pixmap.Format.RGB888);
         visibleFrame.resize(length);
     }
 
-    void createFrame(GameWorld world)
+    @Override
+    public void createFrame(GameWorld world)
     {
         visibleFrame.clear();
         for (IWorldObject object : world.getObjects())
@@ -43,12 +45,25 @@ class ViewDrawer
             pixmap.drawPixel(i, 0, visibleFrame.getColorBuffer()[i]);
 
             // Blend with z buffer a little:
+            float z = visibleFrame.getZBuffer()[i];
+
+//            z = 1 - (1 - z) * (1 - z);
+//            z=z*z;
+
             pixmap.drawPixel(i, 0, Color.rgba8888(
-                    1, 1, 1, .45f - visibleFrame.getZBuffer()[i] * .3f));
+                    1, 1, 1, .35f - step(z, 7) * .35f));
+//            pixmap.drawPixel(i, 0, Color.rgba8888(
+//                    1, 1, 1, .10f + z * .35f));
         }
     }
 
-    void drawFrame(SpriteBatch batch)
+    private float step(float value, int stepsAmount)
+    {
+        return (int) (value * stepsAmount) / (float) stepsAmount;
+    }
+
+    @Override
+    public void drawFrame(SpriteBatch batch)
     {
         final float height = 15;
 
