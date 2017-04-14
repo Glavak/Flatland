@@ -37,7 +37,7 @@ public class GameScreen extends ScreenAdapter
         miniMapDrawer = new MiniMapDrawer(300, 200);
 
         Camera camera = new Camera();
-        camera.getPosition().set(new Vector2(5, 0));
+        camera.getPosition().set(new Vector2(100, 100));
         camera.getAngle().set((float) Math.PI / 4);
 
         gameWorld = new GameWorld(camera);
@@ -56,8 +56,7 @@ public class GameScreen extends ScreenAdapter
     @Override
     public void render(float delta)
     {
-        Gdx.gl.glClearColor(.1f, .1f, .1f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        ColorManager.glClear();
 
         act(delta);
 
@@ -76,6 +75,10 @@ public class GameScreen extends ScreenAdapter
         Vector2 playerMovement = inputListener.getMovingDirection().scl(deltaTime * movementSensitivity);
 
         gameWorld.getPlayer().move(playerRotation, playerMovement.y, playerMovement.x);
+        if(inputListener.isPlayerVisibilityToggled())
+        {
+            gameWorld.getPlayer().setVisible(!gameWorld.getPlayer().isVisible());
+        }
     }
 
     @Override

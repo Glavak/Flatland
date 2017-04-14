@@ -47,13 +47,8 @@ class ViewDrawerFlat implements IViewDrawer
             // Blend with z buffer a little:
             float z = visibleFrame.getZBuffer()[i];
 
-//            z = 1 - (1 - z) * (1 - z);
-//            z=z*z;
-
-            pixmap.drawPixel(i, 0, Color.rgba8888(
-                    1, 1, 1, .35f - step(z, 7) * .35f));
-//            pixmap.drawPixel(i, 0, Color.rgba8888(
-//                    1, 1, 1, .10f + z * .35f));
+            pixmap.drawPixel(i, 0, ColorManager.getFogColor(.35f - z * .35f));
+//            pixmap.drawPixel(i, 0, ColorManager.getFogColor(.10f + z * .35f));
         }
     }
 

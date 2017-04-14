@@ -45,11 +45,27 @@ public class Angle
         angleB.direction = tmp;
     }
 
+    /**
+     * @return angle value in radians, (-Pi - Pi)
+     */
     public float getRadians()
     {
         return direction.angleRad();
     }
 
+    /**
+     * @return angle value in radians, (0 - 2Pi)
+     */
+    public float getPositiveRadians()
+    {
+        float rads = direction.angleRad();
+        if (rads < 0) rads += (float) Math.PI * 2;
+        return rads;
+    }
+
+    /**
+     * @return angle value in degrees (0 - 360)
+     */
     public float getDegrees()
     {
         return direction.angle();

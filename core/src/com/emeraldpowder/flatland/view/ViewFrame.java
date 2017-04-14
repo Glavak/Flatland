@@ -24,7 +24,7 @@ public class ViewFrame implements IViewFrame
         for (int i = 0; i < zBuffer.length; i++)
         {
             zBuffer[i] = 0;
-            colorBuffer[i] = Color.rgba8888(Color.BLACK);
+            colorBuffer[i] = ColorManager.viewClearColor;
         }
     }
 

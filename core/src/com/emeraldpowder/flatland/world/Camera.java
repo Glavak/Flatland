@@ -6,7 +6,7 @@ import com.emeraldpowder.flatland.data.Angle;
 public class Camera
 {
     private float fieldOfView = (float) Math.PI / 4;
-    private float farCullingLine = 50;
+    private float farCullingLine = 80;
 
     private Vector2 position = new Vector2(0, 0);
     private Angle viewingAngle = new Angle(0);
@@ -59,15 +59,25 @@ public class Camera
      */
     public ObjectBounds getObjectBounds(ObjectProjection projection)
     {
-        Angle objectStartRelativeToViewingAngle = new Angle(
-                -viewingAngle.getRadians() + projection.getAngleStart().getRadians()
-        );
-        Angle objectEndRelativeToViewingAngle = new Angle(
-                -viewingAngle.getRadians() + projection.getAngleEnd().getRadians()
-        );
+        float objectStartRelativeToViewingAngle =
+                -viewingAngle.getPositiveRadians() + projection.getAngleStart().getPositiveRadians();
+        float objectEndRelativeToViewingAngle =
+                -viewingAngle.getPositiveRadians() + projection.getAngleEnd().getPositiveRadians();
 
-        float xStart = 0.5f + objectStartRelativeToViewingAngle.getRadians() / fieldOfView;
-        float xEnd = 0.5f + objectEndRelativeToViewingAngle.getRadians() / fieldOfView;
+        if (objectStartRelativeToViewingAngle > objectEndRelativeToViewingAngle)
+        {
+            if (objectStartRelativeToViewingAngle > 0)
+            {
+                objectStartRelativeToViewingAngle -= Math.PI * 2;
+            }
+            else
+            {
+                objectEndRelativeToViewingAngle += Math.PI * 2;
+            }
+        }
+
+        float xStart = 0.5f + objectStartRelativeToViewingAngle / fieldOfView;
+        float xEnd = 0.5f + objectEndRelativeToViewingAngle / fieldOfView;
         return new ObjectBounds(xStart, xEnd);
     }
 }

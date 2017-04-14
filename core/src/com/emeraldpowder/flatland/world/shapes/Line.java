@@ -1,11 +1,10 @@
 package com.emeraldpowder.flatland.world.shapes;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.emeraldpowder.flatland.data.Angle;
-import com.emeraldpowder.flatland.data.VectorUtils;
+import com.emeraldpowder.flatland.data.MyMath;
 import com.emeraldpowder.flatland.view.IMiniMapFrame;
 import com.emeraldpowder.flatland.view.ViewFrame;
 import com.emeraldpowder.flatland.world.Camera;
@@ -48,6 +47,7 @@ public class Line implements IViewShape, IMiniMapShape, IPhysicsShape
     {
         LineObjectProjection projection = getObjectProjection(camera.getPosition());
         ObjectBounds objectBounds = camera.getObjectBounds(projection);
+//        System.out.println(color + " " + projection + " " + objectBounds + " " + projection.isInverted);
 
         float distanceToEnd = camera.getPosition().cpy().sub(positionEnd).len();
 
@@ -118,7 +118,7 @@ public class Line implements IViewShape, IMiniMapShape, IPhysicsShape
         {
             Line otherAsLine = (Line) other;
 
-            return VectorUtils.linesIntersects(positionStart, positionEnd,
+            return MyMath.linesIntersects(positionStart, positionEnd,
                     otherAsLine.positionStart, otherAsLine.positionEnd);
         }
 

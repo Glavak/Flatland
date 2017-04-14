@@ -3,7 +3,7 @@ package com.emeraldpowder.flatland.data;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-public class VectorUtils
+public class MyMath
 {
     /**
      * Given three collinear points p, q, r,  checks if point q lies on line segment pr

@@ -11,10 +11,21 @@ public class Player implements IWorldObject
     final private float radius = 2;
     private Camera boundCamera;
     private GameWorld parentWorld;
+    private boolean visible = true;
 
     public Player(Camera boundCamera)
     {
         this.boundCamera = boundCamera;
+    }
+
+    public boolean isVisible()
+    {
+        return visible;
+    }
+
+    public void setVisible(boolean visible)
+    {
+        this.visible = visible;
     }
 
     @Override
@@ -64,12 +75,19 @@ public class Player implements IWorldObject
     @Override
     public IMiniMapShape getMiniMapShape()
     {
-        return new SphereWithCone(
-                boundCamera.getPosition(),
-                radius,
-                boundCamera.getFarCullingLine(),
-                boundCamera.getAngle(),
-                boundCamera.getFieldOfView(), Color.WHITE);
+        if (visible)
+        {
+            return new SphereWithCone(
+                    boundCamera.getPosition(),
+                    radius,
+                    boundCamera.getFarCullingLine(),
+                    boundCamera.getAngle(),
+                    boundCamera.getFieldOfView(), Color.WHITE);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     @Override

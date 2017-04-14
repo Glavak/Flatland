@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.emeraldpowder.flatland.data.Angle;
-import com.emeraldpowder.flatland.data.VectorUtils;
+import com.emeraldpowder.flatland.data.MyMath;
 import com.emeraldpowder.flatland.view.IMiniMapFrame;
 import com.emeraldpowder.flatland.view.ViewFrame;
 import com.emeraldpowder.flatland.world.Camera;
@@ -117,11 +117,11 @@ public class Sphere implements IViewShape, IMiniMapShape, IPhysicsShape
             Vector2 AB = otherAsLine.getPositionEnd().cpy().sub(otherAsLine.getPositionStart());
             Vector2 AO = position.cpy().sub(otherAsLine.getPositionStart());
 
-            Vector2 projection = VectorUtils.projectVectors(AB, AO);
+            Vector2 projection = MyMath.projectVectors(AB, AO);
             Vector2 closestPointOnLine = projection.add(otherAsLine.getPositionStart());
 
             return closestPointOnLine.dst(position) < radius &&
-                    VectorUtils.onSegment(otherAsLine.getPositionStart(),
+                    MyMath.onSegment(otherAsLine.getPositionStart(),
                             closestPointOnLine,
                             otherAsLine.getPositionEnd());
         }

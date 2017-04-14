@@ -9,24 +9,22 @@ import com.emeraldpowder.flatland.world.GameWorld;
 import com.emeraldpowder.flatland.world.objects.IWorldObject;
 import com.emeraldpowder.flatland.world.shapes.IViewShape;
 
-class ViewDrawerPerspective implements IViewDrawer
+class ViewDrawerLined implements IViewDrawer
 {
-    private final int height = 50;
-    private final int minHeight = 5;
+    private final float lineThreshold = .02f;
     private Pixmap pixmap;
     private ViewFrame visibleFrame;
 
-    public ViewDrawerPerspective(int length)
+    ViewDrawerLined(int length)
     {
-        pixmap = new Pixmap(length, height, Pixmap.Format.RGB888);
-        pixmap.setFilter(Pixmap.Filter.BiLinear);
+        pixmap = new Pixmap(length, 1, Pixmap.Format.RGB888);
         visibleFrame = new ViewFrame(length);
     }
 
     @Override
     public void setFrameLength(int length)
     {
-        pixmap = new Pixmap(length, height, Pixmap.Format.RGB888);
+        pixmap = new Pixmap(length, 1, Pixmap.Format.RGB888);
         visibleFrame.resize(length);
     }
 
@@ -43,24 +41,40 @@ class ViewDrawerPerspective implements IViewDrawer
             }
         }
 
+        float previousLineZ = visibleFrame.getZBuffer()[0];
         for (int i = 0; i < visibleFrame.getLength(); i++)
         {
-            int pixelHeight = (int) ((minHeight + (visibleFrame.getZBuffer()[i] * (height - minHeight))) / 2);
+            pixmap.drawPixel(i, 0, visibleFrame.getColorBuffer()[i]);
 
-            pixmap.setColor(Color.rgba8888(0,0,0,1));
-            pixmap.drawLine(i, 0, i, height);
+            // Blend with z buffer a little:
+            float z = visibleFrame.getZBuffer()[i];
+            pixmap.drawPixel(i, 0, ColorManager.getFogColor(.35f - z * .35f));
 
-            pixmap.setColor(visibleFrame.getColorBuffer()[i]);
-            pixmap.drawLine(i, height / 2 - pixelHeight, i, height / 2 + pixelHeight);
+            float dZ = Math.abs(previousLineZ - z);
 
-            pixmap.setColor(ColorManager.getFogColor(.45f - visibleFrame.getZBuffer()[i] * .3f));
-            pixmap.drawLine(i, height / 2 - pixelHeight, i, height / 2 + pixelHeight);
+            if (dZ > lineThreshold)
+            {
+                float lineBrightness = (dZ - lineThreshold) / lineThreshold;
+                if (lineBrightness > 1) lineBrightness = 1;
+                lineBrightness = lineBrightness * .5f + .3f;
+                pixmap.drawPixel(i, 0, Color.rgba8888(
+                        1, 1, 0, lineBrightness));
+
+                previousLineZ = z;
+            }
         }
+    }
+
+    private float step(float value, int stepsAmount)
+    {
+        return (int) (value * stepsAmount) / (float) stepsAmount;
     }
 
     @Override
     public void drawFrame(SpriteBatch batch)
     {
+        final float height = 15;
+
         batch.draw(new Texture(pixmap),
                 0, (Gdx.graphics.getHeight() - height) / 2,
                 Gdx.graphics.getWidth(), height);

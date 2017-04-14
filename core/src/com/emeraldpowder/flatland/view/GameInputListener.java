@@ -1,5 +1,6 @@
 package com.emeraldpowder.flatland.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -13,6 +14,7 @@ class GameInputListener extends InputAdapter
     private boolean isBackwardPressed;
     private boolean isRightPressed;
     private boolean isLeftPressed;
+    private boolean playerVisibilityToggled;
 
     @Override
     public boolean mouseMoved(int screenX, int screenY)
@@ -52,6 +54,12 @@ class GameInputListener extends InputAdapter
             case Input.Keys.D:
                 isRightPressed = isPressed;
                 break;
+            case Input.Keys.V:
+                if (isPressed) playerVisibilityToggled = true;
+                break;
+            case Input.Keys.ESCAPE:
+                Gdx.app.exit();
+                break;
         }
     }
 
@@ -78,5 +86,15 @@ class GameInputListener extends InputAdapter
         int result = deltaX;
         deltaX = 0;
         return result;
+    }
+
+    /**
+     * @return is player visibility toggled since last call
+     */
+    public boolean isPlayerVisibilityToggled()
+    {
+        boolean res = this.playerVisibilityToggled;
+        playerVisibilityToggled = false;
+        return res;
     }
 }

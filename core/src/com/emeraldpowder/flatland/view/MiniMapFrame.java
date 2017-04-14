@@ -41,10 +41,10 @@ public class MiniMapFrame implements IMiniMapFrame
         pixmap.setColor(Color.CLEAR);
         pixmap.fill();
 
-        pixmap.setColor(.2f, .2f, .2f, .2f);
+        pixmap.setColor(ColorManager.miniMapBackground);
         pixmap.fill();
 
-        pixmap.setColor(1, 1, 1, .8f);
+        pixmap.setColor(ColorManager.miniMapBorders);
         pixmap.drawRectangle(0, 0, getWidth(), getHeight());
     }
 
